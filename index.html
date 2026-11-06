@@ -202,9 +202,12 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden){unread=0;
 document.addEventListener('click',()=>{try{if(window.Notification&&Notification.permission==='default')Notification.requestPermission()}catch{}},{once:true});
 
 $('#more').onclick=()=>{
-  const a=prompt('1 — ссылка для собеседника\n2 — очистить переписку\n3 — новый собеседник (сброс)');
+  const a=prompt('1 — ссылка для собеседника\n2 — очистить переписку\n3 — новый собеседник (сброс)\n4 — вставить ссылку-приглашение');
   if(a==='1')$('#invite').classList.remove('hide');
   if(a==='2'&&confirm('Удалить переписку на этом телефоне?')){S.msgs=[];save();render()}
+  if(a==='4'){const l=prompt('Вставьте ссылку-приглашение:')||'';const c=(l.match(/invite=([0-9a-f]{16,64})/)||[])[1];
+    if(!c)return l&&alert('Это не ссылка-приглашение');
+    if(c!==S.code&&(!S.msgs.length||confirm('Подключиться к этому собеседнику? Текущая переписка на этом устройстве будет удалена.'))){S={code:c,me:2,msgs:[]};save();location.reload()}}
   if(a==='3'&&confirm('Сбросить? Связь с текущим собеседником пропадёт.')){localStorage.removeItem(LS);location.reload()}
 };
 
